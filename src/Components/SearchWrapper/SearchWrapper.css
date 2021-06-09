@@ -1,0 +1,33 @@
+form {
+    padding-bottom: 23px;
+}
+
+input {
+    padding: 10px;
+    font-size: 24px;
+    border-color: #362f4b;
+    border-right: 0;
+}
+
+input:focus-visible {
+    outline:none;
+}
+
+button {
+
+    font-size: 24px;
+    padding: 10px;
+
+
+    background-color: #362f4b;
+    color: #f3f3f3;
+    border: 2px solid #362f4b;
+}
+
+button:hover {
+    cursor:pointer;
+    background-color: #47405c;
+    color: #ffffff;
+    border: 2px solid #47405c;
+
+}
