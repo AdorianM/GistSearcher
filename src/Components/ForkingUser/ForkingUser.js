@@ -1,11 +1,12 @@
 import React from 'react';
+import './ForkingUser.css';
 
 const ForkingUser = ({imgsrc, username}) => {
     return(
-        <div className="user-wrapper">
+        <span className="user-wrapper">
             <img alt="user" src={imgsrc} />
             <span>{username}</span>
-        </div>
+        </span>
     )
 }
 

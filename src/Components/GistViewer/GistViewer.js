@@ -4,28 +4,61 @@ import ForkingUser from "../ForkingUser/ForkingUser";
 import './GistViewer.css';
 import axios from "axios";
 
-const GistViewer = ({gists, search}) => {
+const GistViewer = ({gists, forks}) => {
 
-    const searchFilter = search;
     let parity = false;
 
     const getTags = (filelist) => {
         const files = Object.values(filelist);
 
-        console.log(files[0].language);
-
-        return files.map((file, i) => <Tag text={file.language} key={i} />);
+        return files.map((file, i) => {
+            if(file.language !== null && file.language !== "") {
+                return <Tag text={file.language} key={i} />
+            }
+            return <Tag text={"Missing Tag"} key={i} />
+        });
     }
 
-    const getForkingUsers = async (forkURL) => {
-        /*await axios({
-            method: "get",
-            url: forkURL
-        }).then(res => {
-            let data = res.data;
-            console.log("Data:");
-            console.log(data);
-        });*/
+    const showContent = (id) => {
+
+    }
+
+    const getLastThreeForks = (forkslist) => {
+        const threeLatest = [...new Set(forkslist)].reduce((a, b) => {
+            if (a.length < 3) return a.concat(b);
+            a.sort((x,y) => x.created_at - y.created_at);
+            let index = a.findIndex(e => e > b);
+            if (index > -1) {
+                a.splice(index, 1);
+                return a.concat(b);
+            }
+            return a;
+        },[]);
+
+        console.log(threeLatest);
+
+        return threeLatest;
+    }
+
+    const getForks = (id, forks) => {
+        let currentIdForks = [];
+        forks.forEach(fork => {
+            if(id === fork[0]) {
+                currentIdForks = [...currentIdForks, fork[1]];
+            }
+        });
+
+        if(currentIdForks.length === 0) {
+            return "No forks"
+        }
+
+        const lastThreeForks = getLastThreeForks(currentIdForks[0]);
+
+        return lastThreeForks.map((fork, i) => {
+            return <ForkingUser imgsrc={fork.owner.avatar_url} username={fork.owner.login} key={i} />
+        });
+
+
     }
 
     const renderGist = (gist) => {
@@ -33,9 +66,9 @@ const GistViewer = ({gists, search}) => {
         if(parity) {
             return(
                 [
-                    <span className="even" key={gist.id}> {gist.id} </span>,
+                    <span className="even" key={gist.id} onClick={showContent(gist.id)}> {gist.id} </span>,
                     <span className="even" key={gist.id + "Tag"}>{getTags(gist.files)}</span>,
-                    <span className="even" key={gist.id + "Forks"}>{getForkingUsers(gist.forks_url)}</span>
+                    <span className="even" key={gist.id + "Forks"}>{getForks(gist.id, forks)}</span>
                 ]
             );
         }
@@ -44,7 +77,7 @@ const GistViewer = ({gists, search}) => {
             [
                 <span key={gist.id}> {gist.id} </span>,
                 <span key={gist.id + "Tag"}>{getTags(gist.files)}</span>,
-                <span key={gist.id + "Forks"}>{getForkingUsers(gist.forks_url)}</span>
+                <span key={gist.id + "Forks"}>{getForks(gist.id, forks)}</span>
             ]
         );
 
