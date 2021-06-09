@@ -17,3 +17,7 @@
 .container-results .even {
     background-color: #d2d2d2;
 }
+
+.span-id:hover {
+    cursor: pointer;
+}

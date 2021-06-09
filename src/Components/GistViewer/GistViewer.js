@@ -4,7 +4,7 @@ import ForkingUser from "../ForkingUser/ForkingUser";
 import './GistViewer.css';
 import axios from "axios";
 
-const GistViewer = ({gists, forks}) => {
+const GistViewer = ({gists, forks, modalHandler}) => {
 
     let parity = false;
 
@@ -20,7 +20,7 @@ const GistViewer = ({gists, forks}) => {
     }
 
     const showContent = (id) => {
-
+        modalHandler(id);
     }
 
     const getLastThreeForks = (forkslist) => {
@@ -66,7 +66,7 @@ const GistViewer = ({gists, forks}) => {
         if(parity) {
             return(
                 [
-                    <span className="even" key={gist.id} onClick={showContent(gist.id)}> {gist.id} </span>,
+                    <span className="even span-id" key={gist.id} onClick={(id) => showContent(gist.id)}> {gist.id} </span>,
                     <span className="even" key={gist.id + "Tag"}>{getTags(gist.files)}</span>,
                     <span className="even" key={gist.id + "Forks"}>{getForks(gist.id, forks)}</span>
                 ]
@@ -75,7 +75,7 @@ const GistViewer = ({gists, forks}) => {
 
         return(
             [
-                <span key={gist.id}> {gist.id} </span>,
+                <span className="span-id" key={gist.id} onClick={(id) => showContent(gist.id)}> {gist.id} </span>,
                 <span key={gist.id + "Tag"}>{getTags(gist.files)}</span>,
                 <span key={gist.id + "Forks"}>{getForks(gist.id, forks)}</span>
             ]

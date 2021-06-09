@@ -2,28 +2,27 @@ import {useState, useEffect} from 'react';
 import GistViewer from "../GistViewer/GistViewer";
 import axios from "axios";
 import './SearchWrapper.css'
+import Modal from 'react-modal';
 
 const SearchWrapper = () => {
 
     const [searchField, setSearchField] = useState("");
-    const [loading, setLoading] = useState(false);
     const [gists, setGists] = useState([]);
     const [forks, setForks] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [modalContent, setModalContent] = useState("");
 
     const API_URL = "https://api.github.com";
-    const ACCESS_TOKEN = "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";
 
     const searchGists = async () => {
-        setLoading(true);
         let res = await axios({
             method: "get",
             url: `${API_URL}/users/${searchField}/gists`,
-            headers: {
-                'Authorization': `token ${ACCESS_TOKEN}`
-            }
+            // headers: {
+            //     'Authorization': `token ${ACCESS_TOKEN}`
+            // }
         });
 
-        setLoading(false);
         console.log("Gists:");
         console.log(res.data);
         await setGists(res.data);
@@ -36,7 +35,11 @@ const SearchWrapper = () => {
 
     useEffect(() => {
         console.log(forks);
-    }, [forks])
+    }, [forks]);
+
+    useEffect(() => {
+        console.log(modalContent);
+    }, [modalContent]);
 
     const getForkInfo = (gists) => {
         setForks([]);
@@ -46,12 +49,11 @@ const SearchWrapper = () => {
             let res = await axios({
                 method: "get",
                 url: url,
-                headers: {
+                /*headers: {
                     'Authorization': `token ${ACCESS_TOKEN}`
-                }
+                }*/
             });
 
-            //console.log("Upper: " + gist.id);
             const currentFork = [gist.id, res.data];
             if(res.data.length > 0) {
                 setForks([...forks, currentFork]);
@@ -69,7 +71,44 @@ const SearchWrapper = () => {
         searchGists();
     }
 
+    const handleModalContentChanged = (id) => {
+        setShowModal(true);
+        gists.forEach(gist => {
+            if(gist.id === id) {
+                let files = Object.values(gist.files);
 
+                files.forEach(file => {
+                    setModalContent(file.raw_url + "\n" + modalContent);
+                });
+            }
+        });
+    }
+
+    const closeModal = (e) => {
+        e.preventDefault();
+        setShowModal(false);
+        setModalContent([]);
+    }
+
+    const customStyles = {
+        content : {
+            top                   : '50%',
+            left                  : '50%',
+            right                 : 'auto',
+            bottom                : 'auto',
+            marginRight           : '-50%',
+            transform             : 'translate(-50%, -50%)',
+            width                 : '800px',
+            height                : '600px',
+            padding               : '60px',
+            backgroundColor       : '#f3f3f3',
+            wordBreak             : 'break-all',
+            textAlign             : 'center',
+            borderRadius          : '0'
+        }
+    };
+
+    Modal.setAppElement('#root');
 
     return (
         <div className="searchWrapper">
@@ -77,7 +116,15 @@ const SearchWrapper = () => {
                 <input type="text" placeholder="Search..." onChange={e => handleSearchChanged(e)}/>
                 <button type="submit" onClick={e => handleSubmit(e)}>Search</button>
             </form>
-            <GistViewer gists={gists} forks={forks} />
+            <GistViewer gists={gists} forks={forks} modalHandler={(id) => handleModalContentChanged(id)}/>
+            <Modal isOpen={showModal} style={customStyles}>
+                <div className="gistContent">
+                    <p>{modalContent}</p>
+                </div>
+                <button className="modal-button" onClick={(e) => closeModal(e)}>
+                    Close modal
+                </button>
+            </Modal>
         </div>
     );
 }
