@@ -1,0 +1,18 @@
+.user-wrapper {
+    border: 1px solid #362f4b;
+    padding: 2px;
+    margin: 2px;
+
+    display: flex;
+    align-items: center;
+}
+
+.user-wrapper img {
+    width: 20px;
+    height: 20px;
+}
+
+.user-wrapper p {
+    margin: 0;
+}
+

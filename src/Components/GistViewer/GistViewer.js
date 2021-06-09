@@ -1,6 +1,8 @@
 import React from 'react';
 import Tag from "../Tag/Tag";
+import ForkingUser from "../ForkingUser/ForkingUser";
 import './GistViewer.css';
+import axios from "axios";
 
 const GistViewer = ({gists, search}) => {
 
@@ -15,6 +17,17 @@ const GistViewer = ({gists, search}) => {
         return files.map((file, i) => <Tag text={file.language} key={i} />);
     }
 
+    const getForkingUsers = async (forkURL) => {
+        /*await axios({
+            method: "get",
+            url: forkURL
+        }).then(res => {
+            let data = res.data;
+            console.log("Data:");
+            console.log(data);
+        });*/
+    }
+
     const renderGist = (gist) => {
         parity = !parity;
         if(parity) {
@@ -22,7 +35,7 @@ const GistViewer = ({gists, search}) => {
                 [
                     <span className="even" key={gist.id}> {gist.id} </span>,
                     <span className="even" key={gist.id + "Tag"}>{getTags(gist.files)}</span>,
-                    <span className="even" key={gist.id + "Forks"}> Recent Forks </span>
+                    <span className="even" key={gist.id + "Forks"}>{getForkingUsers(gist.forks_url)}</span>
                 ]
             );
         }
@@ -31,7 +44,7 @@ const GistViewer = ({gists, search}) => {
             [
                 <span key={gist.id}> {gist.id} </span>,
                 <span key={gist.id + "Tag"}>{getTags(gist.files)}</span>,
-                <span key={gist.id + "Forks"}> Recent Forks </span>
+                <span key={gist.id + "Forks"}>{getForkingUsers(gist.forks_url)}</span>
             ]
         );
 

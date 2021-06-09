@@ -18,8 +18,8 @@ const SearchWrapper = () => {
             url: `${API_URL}/users/${searchField}/gists`
         }).then(res => {
            setLoading(false);
+           console.log(res.data);
            setGists(res.data);
-           console.log(gists);
         });
     }
 
@@ -27,7 +27,7 @@ const SearchWrapper = () => {
         setSearchField(e.target.value);
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         searchGists();
     }
