@@ -2,9 +2,6 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-auto-flow: row dense;
-
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
 }
 
 .container-results .grid-head {

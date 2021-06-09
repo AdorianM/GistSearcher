@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import './GistViewer.css';
 
 const GistViewer = ({gists, search}) => {
@@ -8,19 +8,24 @@ const GistViewer = ({gists, search}) => {
 
     const renderGist = (gist) => {
         parity = !parity;
-        return([
-            <span className={parity && "even"} key={gist.id}>
-                {gist.id}
-            </span>,
-            <span className={parity && "even"} key={gist.id}>
-                Tag
-            </span>,
-            <span className={parity && "even"} key={gist.id}>
-                Recent Forks
-            </span>
-            ]
+        if(parity) {
+            return(
+                [
+                    <span className="even" key={gist.id}> {gist.id} </span>,
+                    <span className="even" key={gist.id + "Tag"}> Tag </span>,
+                    <span className="even" key={gist.id + "Forks"}> Recent Forks </span>
+                ]
+            );
+        }
 
+        return(
+            [
+                <span key={gist.id}> {gist.id} </span>,
+                <span key={gist.id + "Tag"}> Tag </span>,
+                <span key={gist.id + "Forks"}> Recent Forks </span>
+            ]
         );
+
     }
 
     return(
