@@ -1,0 +1,10 @@
+.tag {
+    display: inline-block;
+
+    border: 1px solid #362f4b;
+    background-color: #f3f3f3;
+    color: #362f4b;
+
+    padding: 2px;
+    margin: 2px;
+}

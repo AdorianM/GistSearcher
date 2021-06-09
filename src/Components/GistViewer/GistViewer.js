@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react';
+import React from 'react';
+import Tag from "../Tag/Tag";
 import './GistViewer.css';
 
 const GistViewer = ({gists, search}) => {
@@ -6,13 +7,21 @@ const GistViewer = ({gists, search}) => {
     const searchFilter = search;
     let parity = false;
 
+    const getTags = (filelist) => {
+        const files = Object.values(filelist);
+
+        console.log(files[0].language);
+
+        return files.map((file, i) => <Tag text={file.language} key={i} />);
+    }
+
     const renderGist = (gist) => {
         parity = !parity;
         if(parity) {
             return(
                 [
                     <span className="even" key={gist.id}> {gist.id} </span>,
-                    <span className="even" key={gist.id + "Tag"}> Tag </span>,
+                    <span className="even" key={gist.id + "Tag"}>{getTags(gist.files)}</span>,
                     <span className="even" key={gist.id + "Forks"}> Recent Forks </span>
                 ]
             );
@@ -21,7 +30,7 @@ const GistViewer = ({gists, search}) => {
         return(
             [
                 <span key={gist.id}> {gist.id} </span>,
-                <span key={gist.id + "Tag"}> Tag </span>,
+                <span key={gist.id + "Tag"}>{getTags(gist.files)}</span>,
                 <span key={gist.id + "Forks"}> Recent Forks </span>
             ]
         );
